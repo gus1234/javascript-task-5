@@ -40,13 +40,18 @@ function getEmitter() {
          * @returns {Object}
          */
         off: function (event, context) {
+            let events = [];
             if (subscribers.hasOwnProperty(event)) {
-                subscribers[event] = subscribers[event]
-                    .filter(element => element.student !== context);
+                events.push(event);
             }
-
-            if (event === 'slide') {
-                this.off('slide.funny', context);
+            for (let name of Object.keys(subscribers)) {
+                if (name.indexOf(event) === 0 && events.length > 0) {
+                    events.push(name);
+                }
+            }
+            for (let _event of events) {
+                subscribers[_event] = subscribers[_event]
+                    .filter(element => element.student !== context);
             }
 
             return this;
